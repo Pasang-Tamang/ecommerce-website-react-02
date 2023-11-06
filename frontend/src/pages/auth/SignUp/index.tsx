@@ -4,12 +4,14 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import {
-  errorToast,
+
   successToast,
   warningToast,
 } from "../../../services/toaster.service";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
+
+import { postData } from "../../../services/axios.service";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -33,22 +35,31 @@ const SignUp = () => {
         confirmPassword,
       };
 
-      try {
-        const response = await axios.post(
-          "http://localhost:8080/api/v1/auth/register",
-          userData
-        );
-        console.log(response);
-
-        if (response.data.status) {
-          navigate("/");
-          successToast(response.data.message);
-        }
-      } catch (error: any) {
-        console.log(error);
-
-        errorToast(error.response.data.error);
+      const response = await postData("/auth/register", userData)
+     
+      if (response.status) {
+        console.log(response.message)
+        navigate("/");
+       
+        successToast(response.data.message);
       }
+
+      // try {
+      //   const response = await axios.post(
+      //     `${config.SERVER_URL}/auth/register`,
+      //     userData
+      //   );
+      //   console.log(response);
+
+      //   if (response.data.status) {
+      //     navigate("/");
+      //     successToast(response.data.message);
+      //   }
+      // } catch (error: any) {
+      //   console.log(error);
+
+      //   errorToast(error.response.data.error);
+      // }
     }
   };
   return (
