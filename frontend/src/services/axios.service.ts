@@ -11,3 +11,12 @@ export const postData = async (url:string, data:any) => {
     errorToast(error.response.data.error)
    }
 }
+
+export const getData = async (url:string) => {
+  try {
+   const response = await axios.get(`${config.SERVER_URL}${url}`)
+   return response.data
+  } catch (error) {
+   console.log(error)
+  }
+}
