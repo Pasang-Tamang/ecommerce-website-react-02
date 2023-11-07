@@ -8,9 +8,12 @@ import { AuthInterface } from "../../../interface/auth.interface";
 import { postData } from "../../../services/axios.service";
 import { useNavigate } from "react-router-dom";
 import { successToast } from "../../../services/toaster.service";
+import { useDispatch } from "react-redux";
+import { login } from "../../../slice/slice";
 
 const Login = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const initialValues = {
     email: "",
     password: "",
@@ -31,6 +34,13 @@ const Login = () => {
     //debugger
 
     if(response.status === "success"){
+      //debugger
+      const data = {
+        jwt: response.token,
+        email: response.authData.email,
+        role:response.authData.role,
+      }
+      dispatch(login(data))
       navigate("/products")
       successToast("User logged in successfully")
     }
