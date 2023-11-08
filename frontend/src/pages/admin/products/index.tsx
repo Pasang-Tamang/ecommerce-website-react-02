@@ -8,12 +8,15 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
-import { getData } from '../../../services/axios.service';
+import { deleteData, getData } from '../../../services/axios.service';
 import Loader from '../../../components/Loader';
 import { Button } from 'react-bootstrap';
 import { FaEdit } from 'react-icons/fa';
 import {AiFillDelete } from 'react-icons/ai';
 import moment from "moment" 
+
+import { useSelector } from 'react-redux';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -55,6 +58,29 @@ const Products = () =>  {
   useEffect(() => {
     getProducts()
   }, [])
+
+  const jwt = useSelector((state:any) => (state.auth.jwt))
+    
+
+  const deleteHandler = async (e:any, id:number) => {
+    e.preventDefault()
+    console.log("clicked")
+    console.log(id)
+
+    
+
+    const response = await deleteData("/product/", id, jwt)
+    console.log(response)
+
+    
+    // const deleteProduct = products.results.filter((product:any) => {
+    //   return product.id !== id
+    // })
+    // console.log(deleteProduct)
+    // setProducts((prev:any) => {
+    //   return {...prev, results: deleteProduct}
+    // })
+  }
   
   
   return (
@@ -89,7 +115,7 @@ const Products = () =>  {
               <StyledTableCell align="right">{moment(product.createdAt).format("YYYY-MM-DD")}</StyledTableCell>
               <StyledTableCell align="right">
                 <Button className='btn btn-primary '><FaEdit/></Button>
-                <Button className='btn btn-danger ms-2'><AiFillDelete/></Button>
+                <Button className='btn btn-danger ms-2' onClick={(e) => {deleteHandler(e, product.id)}}><AiFillDelete/></Button>
               </StyledTableCell>
             </StyledTableRow>
             )
