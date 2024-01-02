@@ -5,16 +5,32 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 
 import DialogTitle from "@mui/material/DialogTitle";
-import { Col, Row } from "react-bootstrap";
+import { Col, Form, Image, Row } from "react-bootstrap";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import ButtonSpinner from "../../Loader/Spinner";
 
-const ProductFormModal = ({ open, handleClose, categories, handleChange, handleSubmit, isSpinning }: any) => {
+const ProductFormModal = ({ open, handleClose, handleUpdate, categories,  handleChange, handleSubmit, isSpinning, edit, product }: any) => {
+
+  console.log(product.brand)
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add Product</DialogTitle>
+      <DialogTitle>{edit ? "Edit Product": "Add Product" }</DialogTitle>
       <DialogContent>
+
+        {
+            
+            edit && (
+              <Row className="mb-2" >
+                <Col className="align-items-center d-flex flex-column" >
+                <Form.Label className="d-block text-dark">Product Image</Form.Label>
+                {/* <Form.Control name="productImage" value={product.productImage}></Form.Control> */}
+                <Image src={product.productImage} style={{height:"280px", width: "200px"}} ></Image>
+                </Col>
+              </Row>
+            )
+        }
         <Row>
+        
           <Col>
             <TextField
               autoFocus
@@ -26,6 +42,7 @@ const ProductFormModal = ({ open, handleClose, categories, handleChange, handleS
               fullWidth
               onChange={handleChange}
               variant="outlined"
+              value={product.name}
             />
           </Col>
 
@@ -40,6 +57,7 @@ const ProductFormModal = ({ open, handleClose, categories, handleChange, handleS
               fullWidth
               variant="outlined"
               onChange={handleChange}
+              value={product.brand}
              
             />
           </Col>
@@ -57,6 +75,7 @@ const ProductFormModal = ({ open, handleClose, categories, handleChange, handleS
               fullWidth
               variant="outlined"
               onChange={handleChange}
+              value={product.price}
             
             />
           </Col>
@@ -72,6 +91,7 @@ const ProductFormModal = ({ open, handleClose, categories, handleChange, handleS
               fullWidth
               variant="outlined"
               onChange={handleChange}
+              value={product.countInStock}
             
             />
           </Col>
@@ -81,7 +101,7 @@ const ProductFormModal = ({ open, handleClose, categories, handleChange, handleS
           <Col>
             <FormControl fullWidth>
               <InputLabel>Category</InputLabel>
-              <Select label="Category" defaultValue = "" name="category"  onChange={handleChange}>
+              <Select label="Category" value = {product.category }defaultValue = "" name="category"  onChange={handleChange}>
                 {/* {console.log(categories)} */}
                 {categories.map((category: any) => {
                   return (
@@ -105,28 +125,31 @@ const ProductFormModal = ({ open, handleClose, categories, handleChange, handleS
               fullWidth
               variant="outlined"
               onChange={handleChange}
+              value={product.description}
             
             />
           </Col>
         </Row>
 
-        <Row>
-            <Col>
-            <TextField type="file"
-             margin="normal"
-             id="file"
-             onChange={handleChange}
-             name="productImage"
-             fullWidth
-             variant="outlined"
-          
-            ></TextField>
-            </Col>
-        </Row>
+      {
+        !edit && <Row>
+        <Col>
+        <TextField type="file"
+         margin="normal"
+         id="file"
+         onChange={handleChange}
+         name="productImage"
+         fullWidth
+         variant="outlined"
+      
+        ></TextField>
+        </Col>
+    </Row>
+      }
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit} disabled = {isSpinning}> {isSpinning ? <ButtonSpinner/> : "Submit"}</Button>
+        <Button onClick={edit? handleUpdate : handleSubmit} disabled = {isSpinning}> {isSpinning ? <ButtonSpinner/> : edit ? "Update" : "Submit"}</Button>
       </DialogActions>
     </Dialog>
   );

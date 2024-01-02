@@ -7,10 +7,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
-import { deleteData, getData, postData } from "../../../services/axios.service";
+import { deleteData, getData } from "../../../services/axios.service";
 import Loader from "../../../components/Loader/Loader";
 import { Button } from "react-bootstrap";
-import { FaEdit } from "react-icons/fa";
+import {  FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
 import moment from "moment";
 
@@ -56,6 +56,7 @@ const Products = () => {
   });
 
   const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false)
 
   const handleClickOpen = (e: any) => {
     e.preventDefault();
@@ -65,6 +66,16 @@ const Products = () => {
   const handleClose = (e: any) => {
     e.preventDefault();
     setOpen(false);
+    setEdit(false)
+    setProduct({
+      name: "",
+      brand: "",
+      price: "",
+      productImage: "",
+      countInStock: "",
+      description: "",
+      category: "",
+    })
   };
 
   const handleChange = (e: any) => {
@@ -167,6 +178,19 @@ const Products = () => {
     // })
   };
 
+  const handleUpdate = (e:any) => {
+    e.preventDefault()
+    console.log(products)
+  }
+
+  const editHandler = (e:any, product:any) => {
+    e.preventDefault()
+    //console.log(id)
+    setOpen(true)
+    setEdit(true)
+    setProduct(product)
+  }
+
   return (
     <TableContainer component={Paper}>
       {isLoading ? (
@@ -177,16 +201,16 @@ const Products = () => {
             Add Product
           </Button>
           {products.status === "success" && (
-            <Table sx={{ minWidth: 100 }} aria-label="customized table">
+            <Table sx={{ minWidth: 10000 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Image</StyledTableCell>
                   <StyledTableCell align="left">Name</StyledTableCell>
-                  <StyledTableCell align="right">Price</StyledTableCell>
-                  <StyledTableCell align="right">Category</StyledTableCell>
+                  <StyledTableCell align="left">Price</StyledTableCell>
+                  <StyledTableCell align="left">Category</StyledTableCell>
                   <StyledTableCell align="left">Brand</StyledTableCell>
-                  <StyledTableCell align="right">Created At</StyledTableCell>
-                  <StyledTableCell align="right">Action</StyledTableCell>
+                  <StyledTableCell align="left">Created At</StyledTableCell>
+                  <StyledTableCell align="left">Action</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -216,7 +240,7 @@ const Products = () => {
                         {moment(product.createdAt).format("YYYY-MM-DD")}
                       </StyledTableCell>
                       <StyledTableCell align="right">
-                        <Button className="btn btn-primary ">
+                        <Button className="btn btn-primary" onClick={(e) => {editHandler(e, product)}}>
                           <FaEdit />
                         </Button>
                         <Button
@@ -241,6 +265,9 @@ const Products = () => {
             handleChange={handleChange}
             handleSubmit ={handleSubmit}
             isSpinning = {isSpinning}
+            edit = {edit}
+            product = {product}
+            handleUpdate = {handleUpdate}
           />
         </>
       )}
